@@ -53,7 +53,7 @@ class EmoticonController: UIViewController {
     private let reuseIdentifier = "EmoticonCell"
     /// 设置collectionView
     private func prepareCollectionView() {
-//        collectionView.backgroundColor = UIColor.yellowColor()
+        collectionView.backgroundColor = UIColor.whiteColor()
         collectionView.registerClass(EmoticonCell.self, forCellWithReuseIdentifier:reuseIdentifier )
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -119,7 +119,7 @@ extension EmoticonController: UICollectionViewDataSource, UICollectionViewDelega
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! EmoticonCell
-        cell.backgroundColor = (indexPath.item % 2 == 0) ? UIColor.redColor() : UIColor.orangeColor()
+       // cell.backgroundColor = (indexPath.item % 2 == 0) ? UIColor.redColor() : UIColor.orangeColor()
         // 获取模型
         let emoticon = emoticonPackages![indexPath.section].emoticons![indexPath.item]
         cell.emoticon = emoticon
