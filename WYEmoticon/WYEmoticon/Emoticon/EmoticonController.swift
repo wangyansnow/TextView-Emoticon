@@ -10,14 +10,10 @@ import UIKit
 
 class EmoticonController: UIViewController {
     /// 表情包数组
-    private var emoticonPackages: [EmoticonPackage]?
+    private lazy var emoticonPackages: [EmoticonPackage] = EmoticonPackage.packages
     
     var emoticonCallBack: (emoticon: Emoticon) -> ()
-//    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-//        super.init(nibName: nil, bundle: nil)
-//        view.backgroundColor = UIColor.orangeColor()
-//        setupUI()
-//    }
+
     init(emoticonCallBack: (emoticon: Emoticon) -> ()) {
         self.emoticonCallBack = emoticonCallBack
         super.init(nibName: nil, bundle: nil)
@@ -30,7 +26,6 @@ class EmoticonController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        emoticonPackages = EmoticonPackage.loadEmoticonPackages()
 
     }
     /// 基本视图准备
@@ -112,25 +107,27 @@ extension EmoticonController: UICollectionViewDataSource, UICollectionViewDelega
     
     // MARK: UICollectionView数据源方法
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return emoticonPackages?.count ?? 0
+        return emoticonPackages.count
     }
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return emoticonPackages![section].emoticons?.count ?? 0
+        return emoticonPackages[section].emoticons!.count
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! EmoticonCell
-       // cell.backgroundColor = (indexPath.item % 2 == 0) ? UIColor.redColor() : UIColor.orangeColor()
         // 获取模型
-        let emoticon = emoticonPackages![indexPath.section].emoticons![indexPath.item]
+        let emoticon = emoticonPackages[indexPath.section].emoticons![indexPath.item]
         cell.emoticon = emoticon
         return cell
     }
     // MARK: UICollectionView代理方法
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         // 1.获取当前用户点击了哪个cell
-        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! EmoticonCell
-        let emoticon = cell.emoticon!
+        let emoticon = emoticonPackages[indexPath.section].emoticons![indexPath.item]
         emoticonCallBack(emoticon: emoticon)
+        // 2.添加最爱表情
+        if indexPath.section > 0 {
+            EmoticonPackage.addFavoriteEmoticon(emoticon)
+        }
     }
     
 }
