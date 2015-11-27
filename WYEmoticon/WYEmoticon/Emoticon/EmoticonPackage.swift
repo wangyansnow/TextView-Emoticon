@@ -30,8 +30,8 @@ class EmoticonPackage: NSObject, NSCoding {
         super.init()
     }
     /// bundlePath文件主路径
-    private class var bundlePath: String {
-        let path = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("Emoticons.bundle")
+    private class var bundlePath: NSString {
+        let path = (NSBundle.mainBundle().bundlePath as NSString).stringByAppendingPathComponent("Emoticons.bundle") as NSString
         return path
     }
     /// 表情包(全局使用)
@@ -60,7 +60,7 @@ class EmoticonPackage: NSObject, NSCoding {
     }
     /// 加载表情数组
     private func loadGroup() -> Self {
-        let path = EmoticonPackage.bundlePath.stringByAppendingPathComponent(id).stringByAppendingPathComponent("info.plist")
+        let path = (EmoticonPackage.bundlePath.stringByAppendingPathComponent(id) as NSString).stringByAppendingPathComponent("info.plist")
         let dictionary = NSDictionary(contentsOfFile: path)!
         group_name_cn = dictionary["group_name_cn"] as! String
         let emoticonArr = dictionary["emoticons"] as! [[String: AnyObject]]
@@ -122,7 +122,7 @@ class EmoticonPackage: NSObject, NSCoding {
     // MARK: - 归档 & 反归档
     /// 沙盒路径
     class var archivePath: String {
-        return NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).last!.stringByAppendingPathComponent("packageEmoticon.plist")
+        return NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).last! + "/packageEmoticon.plist"
     }
     /// 保存模型到沙盒
     func archivie() {
@@ -169,7 +169,7 @@ class Emoticon: NSObject, NSCoding {
     /// 图片名称
     var png: String? {
         didSet {
-            let path = EmoticonPackage.bundlePath.stringByAppendingPathComponent(id).stringByAppendingPathComponent(png!)
+            let path = (EmoticonPackage.bundlePath.stringByAppendingPathComponent(id) as NSString).stringByAppendingPathComponent(png!)
             image = UIImage(contentsOfFile: path)
         }
     }
@@ -210,7 +210,7 @@ class Emoticon: NSObject, NSCoding {
     // MARK: - 归档 & 反归档
     /// 沙盒存储路径
     class var emoticonPath: String {
-        return NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).last!.stringByAppendingPathComponent("emoticon.plist")
+        return NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).last! + "/emoticon.plist"
     }
     /// 保存数据到沙盒
     private func archive() {
